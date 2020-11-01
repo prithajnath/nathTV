@@ -1,0 +1,23 @@
+version: "3.8"
+services:
+  cctv-web:
+    build: .
+    volumes:
+      - .:/usr/bin/cctv
+    ports:
+      - "7000:7000"
+    environment:
+      - PORT=7000
+      - DATABASE_URL=postgres://postgres@cctv-postgres:5432/postgres
+      - SECRET_KEY=hellosecretkey
+      - ENV=development
+      - HLS_STREAM_ARN=$HLS_STREAM_ARN
+      - HLS_STREAM_NAME=$HLS_STREAM_NAME
+      - AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
+      - AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
+    entrypoint: "./dev-entrypoint.sh"
+
+  cctv-postgres:
+    image: postgres
+    environment:
+        - POSTGRES_HOST_AUTH_METHOD=trust 
