@@ -1,45 +1,30 @@
+
 <!doctype html>
 <html lang="en">
   <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet">
       <link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet">
-
+      <style>
+      iframe{
+        width: 1250px;
+        height: 500px;
+      }
+      </style>
     <title>nathTV</title>
   </head>
   <style>
   body{
     font-family: 'Roboto Mono', monospace;
   }
-  
-  a:hover{
-    text-decoration: none;
-  }
-
-  @keyframes live {
-    
-    0%   {background-color: white; border-color: white;}
-    25%   {background-color: #f1afaf;}
-    50%  {background-color: #f85f5f;}
-    75%  {background-color: #f33333;}
-    100% {background-color: #f81414;}
-  }
-
-  .live-button{
-    animation-name: live;
-    animation-duration: 1.5s;
-    animation-iteration-count: infinite;
-    animation-direction: alternate-reverse;
-  }
   </style>
   <body>
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <a class="navbar-brand" href="#"><strong>nath</strong>TV</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
@@ -61,16 +46,15 @@
 </nav>
     <div class="container">
       <div class="row">
-        <h1>Rooms</h1>
-            <p>The LIVE button will generate a temporary link to the video feed of that particular room. Click "Play stream" once you're redirected to the video player</p>
-        {% for room in rooms %}
-          <div class="col-md-6">
-              <br/><br/>
-              <h2>{{ room.name }}</h2>
-              <button type="button" class="btn btn-danger live-button"><a style="color: white;" href="/akamai?room_id={{ room.id }}" target="_blank"><strong>LIVE</strong></a></button>
-          </div>
-        {% endfor %}
-
+        <div class="col-sm-2">
+          <br/><br/>
+          <img src="https://api.adorable.io/avatars/285/{{ current_user.email }}"/>
+        </div>
+        <div class="col-lg-6 offset-md-3">
+          <br/><br/>
+          <h2>Email</h2>
+          <p>{{ current_user.email }}</p>
+        </div>
     </div>
     </div>
 
@@ -79,26 +63,6 @@
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/hls.js/0.5.14/hls.js"></script>
-    <script>
-            var videoElement = document.querySelector("#hlsjs");
-            var src = `{{ src|safe }}`;
-            console.log(src);
-            var hls = new Hls({
-              maxBufferLength: 1,
-              maxBufferSize: 10,
-              maxBufferHole: 1
-            });
-            hls.attachMedia(videoElement);
-            hls.on(Hls.Events.MEDIA_ATTACHED, function(){
-                hls.loadSource(src);
-                hls.on(Hls.Events.MANIFEST_PARSED, function() {
-                    videoElement.play();
-                    console.log('Starting playback');
-                });
-            });
-
-    </script>   -->
 
 
   </body>

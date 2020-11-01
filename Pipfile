@@ -16,6 +16,9 @@ psycopg2 = "*"
 passlib = "*"
 flask-script = "*"
 gunicorn = "*"
+flask-admin = "*"
+flask-wtf = "*"
+wtforms = "*"
 
 [requires]
 python_version = "3.8"

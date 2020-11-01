@@ -11,14 +11,17 @@ class User(dbMixin, UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), nullable=False, unique=True)
     password = db.Column(db.String(100), nullable=False)
+    admin = db.Column(db.Boolean, default=False)
 
     def __init__(
         self,
         username="test",
         password="test",
+        admin=False
     ):
         self.username = username
         self.password = pbkdf2_sha256.hash(password)
+        self.admin = admin
 
     def verify_hash(self, password, hash):
         return pbkdf2_sha256.verify(password, hash)
