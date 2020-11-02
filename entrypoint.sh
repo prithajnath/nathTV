@@ -2,5 +2,5 @@
 python manage.py db migrate
 python manage.py db upgrade
 gunicorn \
-    -w $(expr 2 \* $(nproc) + 1) \
+    -w $(nproc) \
     --bind 0.0.0.0:$PORT app:app
