@@ -36,11 +36,7 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 Bootstrap(app)
 
-
-hls_stream_ARN = os.getenv("HLS_STREAM_ARN")
-STREAM_NAME = os.getenv("HLS_STREAM_NAME")
 kvs = boto3.client("kinesisvideo", region_name="us-west-2")
-
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -58,8 +54,8 @@ def index():
         return redirect("/login")
 
 @app.route("/akamai", methods=["GET"])
+@login_required
 def generate_akamai_link():
-
     id = request.args.get("room_id")
     room = Room.query.filter_by(id=int(id)).first()
     endpoint = kvs.get_data_endpoint(
