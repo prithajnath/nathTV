@@ -1,11 +1,16 @@
 version: "3.8"
 services:
+  nginx:
+    build:
+      context: .
+      dockerfile: nginx.Dockerfile
+    ports:
+      - "7000:80"
+    restart: always
   cctv-web:
     build: .
     volumes:
       - .:/usr/bin/cctv
-    ports:
-      - "7000:7000"
     environment:
       - PORT=7000
       - DATABASE_URL=postgres://postgres@cctv-postgres:5432/postgres
@@ -17,6 +22,7 @@ services:
       - VIDEO_BUCKET_NAME=$VIDEO_BUCKET_NAME
       - SENDGRID_S3_VIDEO_URL_TEMPLATE_ID=$SENDGRID_S3_VIDEO_URL_TEMPLATE_ID
       - SENDGRID_API_KEY=$SENDGRID_API_KEY
+    restart: always
   cctv-celery-workers:
     build: .
     volumes:
@@ -30,6 +36,7 @@ services:
       - SENDGRID_S3_VIDEO_URL_TEMPLATE_ID=$SENDGRID_S3_VIDEO_URL_TEMPLATE_ID
       - SENDGRID_API_KEY=$SENDGRID_API_KEY
     entrypoint: ["celery", "-A", "tasks.celery", "worker", "--uid=$UID", "--loglevel=INFO", "--concurrency=10", "-n", "worker1@%h"]
+    restart: always
   cctv-celery-workers-video-queue:
     build: .
     volumes:
@@ -43,6 +50,7 @@ services:
       - SENDGRID_S3_VIDEO_URL_TEMPLATE_ID=$SENDGRID_S3_VIDEO_URL_TEMPLATE_ID
       - SENDGRID_API_KEY=$SENDGRID_API_KEY
     entrypoint: ["celery", "-A", "tasks.celery", "worker", "--uid=$UID", "--loglevel=INFO", "--concurrency=10", "-n", "worker2@%h", "-Q", "video_queue"]
+    restart: always
   cctv-celery-workers-s3-queue:
     build: .
     volumes:
@@ -56,12 +64,14 @@ services:
       - SENDGRID_S3_VIDEO_URL_TEMPLATE_ID=$SENDGRID_S3_VIDEO_URL_TEMPLATE_ID
       - SENDGRID_API_KEY=$SENDGRID_API_KEY
     entrypoint: ["celery", "-A", "tasks.celery", "worker", "--uid=$UID", "--loglevel=INFO", "--concurrency=10", "-n", "worker3@%h", "-Q", "s3_queue"]
+    restart: always
   cctv-postgres:
     image: postgres
     volumes:
       - /home/prithaj/.local/volumes/cctv-postgres-data:/var/lib/postgresql/data
     environment:
         - POSTGRES_HOST_AUTH_METHOD=trust 
+    restart: always
   cctv-redis:
     image: redis
     restart: always
