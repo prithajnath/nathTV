@@ -48,6 +48,7 @@ def fetch_stream_data(pipe: dict) -> dict:
     room = re.sub("(-|:| |\.)", "_", room)
     timestamp = re.sub("(-|:| |\.)", "_", datetime.now().__str__())
     filename = f"{room}_{timestamp}.mp4"
+    os.makedirs("videos", exist_ok=True)
     with open(f"videos/{filename}", "wb") as f:
         for chunk in response["Payload"]:
             f.write(chunk)
