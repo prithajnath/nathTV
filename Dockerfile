@@ -30,6 +30,8 @@ COPY . .
 RUN pip install -r requirements.txt
 RUN chmod u+x entrypoint.sh
 RUN chmod u+x dev-entrypoint.sh
+RUN chmod u+x jobs/build_container_image.sh
+RUN chmod u+x jobs/deploy_all_services.sh
 
 EXPOSE 7000
 

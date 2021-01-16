@@ -1,0 +1,39 @@
+name: nathTV Build/Deploy
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build_container_image:
+    env:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_PASS: ${{ secrets.DOCKERHUB_PASS }}
+      SECRET_KEY: ${{ secrets.SECRET_KEY }}
+      CELERY_BROKER_URL: ${{ secrets.CELERY_BROKER_URL }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
+      SENDGRID_S3_VIDEO_URL_TEMPLATE_ID: ${{ secrets.SENDGRID_S3_VIDEO_URL_TEMPLATE_ID }}
+      VIDEO_BUCKET_NAME: ${{ secrets.VIDEO_BUCKET_NAME }}
+    runs-on: [ self-hosted, digitalocean ]
+    steps:
+      - uses: actions/checkout@v2
+      - run: ./jobs/build_container_image.sh 
+
+  deploy_all_services:
+    env:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_PASS: ${{ secrets.DOCKERHUB_PASS }}
+      SECRET_KEY: ${{ secrets.SECRET_KEY }}
+      CELERY_BROKER_URL: ${{ secrets.CELERY_BROKER_URL }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
+      SENDGRID_S3_VIDEO_URL_TEMPLATE_ID: ${{ secrets.SENDGRID_S3_VIDEO_URL_TEMPLATE_ID }}
+      VIDEO_BUCKET_NAME: ${{ secrets.VIDEO_BUCKET_NAME }}
+    needs: build_container_image
+    runs-on: [ self-hosted, digitalocean ]
+    steps:
+      - uses: actions/checkout@v2
+      - run: ./jobs/deploy_all_services.sh
