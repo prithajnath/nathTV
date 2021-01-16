@@ -17,6 +17,7 @@ RUN apt install -y \
 	dnsutils \
 	netcat-openbsd \
 	jq \
+	redis \
 	postgresql-client \
 	nmap \
 	net-tools \

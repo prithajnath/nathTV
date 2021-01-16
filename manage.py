@@ -14,7 +14,7 @@ class CreateUser(Command):
         admin = input("admin (y/n)?: ")
 
         new_superuser = User(
-            username=username, password=password, admin=True if admin == 'y' else False
+            username=username, password=password, admin=True if admin == "y" else False
         )
 
         new_superuser.save_to_db(db)

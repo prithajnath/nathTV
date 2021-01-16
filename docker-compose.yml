@@ -15,9 +15,46 @@ services:
       - HLS_STREAM_NAME=$HLS_STREAM_NAME
       - AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
       - AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
+      - CELERY_BROKER_URL=$CELERY_BROKER_URL
+      - VIDEO_BUCKET_NAME=$VIDEO_BUCKET_NAME
     entrypoint: "./dev-entrypoint.sh"
-
+  cctv-celery-workers:
+    build: .
+    volumes:
+      - .:/usr/bin/cctv
+    environment:
+      - ENV=development
+      - AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
+      - AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
+      - CELERY_BROKER_URL=$CELERY_BROKER_URL
+      - VIDEO_BUCKET_NAME=$VIDEO_BUCKET_NAME
+    entrypoint: ["celery", "-A", "tasks.celery", "worker", "--uid=$UID", "--loglevel=INFO", "--concurrency=100", "-n", "worker1@%h"]
+  cctv-celery-workers-video-queue:
+    build: .
+    volumes:
+      - .:/usr/bin/cctv
+    environment:
+      - ENV=development
+      - AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
+      - AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
+      - CELERY_BROKER_URL=$CELERY_BROKER_URL
+      - VIDEO_BUCKET_NAME=$VIDEO_BUCKET_NAME
+    entrypoint: ["celery", "-A", "tasks.celery", "worker", "--uid=$UID", "--loglevel=INFO", "--concurrency=100", "-n", "worker2@%h", "-Q", "video_queue"]
+  cctv-celery-workers-s3-queue:
+    build: .
+    volumes:
+      - .:/usr/bin/cctv
+    environment:
+      - ENV=development
+      - AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
+      - AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
+      - CELERY_BROKER_URL=$CELERY_BROKER_URL
+      - VIDEO_BUCKET_NAME=$VIDEO_BUCKET_NAME
+    entrypoint: ["celery", "-A", "tasks.celery", "worker", "--uid=$UID", "--loglevel=INFO", "--concurrency=100", "-n", "worker2@%h", "-Q", "s3_queue"]
   cctv-postgres:
     image: postgres
     environment:
         - POSTGRES_HOST_AUTH_METHOD=trust 
+  cctv-redis:
+    image: redis
+    restart: always

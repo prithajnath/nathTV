@@ -1,4 +1,5 @@
 <!doctype html>
+{% import "bootstrap/wtf.html" as wtf %}
 <html lang="en">
   <head>
     <!-- Required meta tags -->
@@ -18,7 +19,7 @@
     font-family: 'Roboto Mono', monospace;
   }
   
-  a:hover{
+  .live-link:hover{
     text-decoration: none;
   }
 
@@ -67,7 +68,32 @@
           <div class="col-md-6">
               <br/><br/>
               <h2>{{ room.name }}</h2>
-              <button type="button" class="btn btn-danger live-button"><a style="color: white;" href="/akamai?room_id={{ room.id }}" target="_blank"><strong>LIVE</strong></a></button>
+              <button type="button" class="btn btn-danger live-button"><a class="live-link" style="color: white;" href="/akamai?room_id={{ room.id }}" target="_blank"><strong>LIVE</strong></a></button>
+              <!-- <button type="button" class="btn btn-primary live-button"><a style="color: white;" href="/download_clip?=room_id={{ room.id }}" target="_blank"><strong>LIVE</strong></a></button> -->
+              <button type="button" class="btn btn-primary"><a data-toggle="modal" data-target="#downloadClipModal">Download clip</a></button>
+
+              <div class="modal fade" id="downloadClipModal" tabindex="-1" role="dialog" aria-labelledby="downloadClipModal" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title">{{ room.name }}</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <form method="POST" action="/download_clip?room_id={{ room.id }}">
+                        <div class="form-group">
+                          {{ form.hidden_tag() }}
+                          {{ wtf.form_field(form.start_datetime) }}
+                          {{ wtf.form_field(form.end_datetime) }}
+                            <button type="submit" class="btn btn-primary">Download</button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
           </div>
         {% endfor %}
 

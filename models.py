@@ -6,6 +6,7 @@ from uuid import uuid1
 
 db = SQLAlchemy()
 
+
 class User(dbMixin, UserMixin, db.Model):
     __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True)
@@ -13,12 +14,7 @@ class User(dbMixin, UserMixin, db.Model):
     password = db.Column(db.String(100), nullable=False)
     admin = db.Column(db.Boolean, default=False)
 
-    def __init__(
-        self,
-        username="test",
-        password="test",
-        admin=False
-    ):
+    def __init__(self, username="test", password="test", admin=False):
         self.username = username
         self.password = pbkdf2_sha256.hash(password)
         self.admin = admin
