@@ -21,6 +21,7 @@ flask-wtf = "*"
 wtforms = "*"
 celery = "*"
 redis = "*"
+sendgrid = "*"
 
 [requires]
 python_version = "3.8"

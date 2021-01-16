@@ -120,9 +120,12 @@ def download_clip():
                     "start_datetime": start_datetime,
                     "end_datetime": end_datetime,
                     "room": room.name,
+                    "email": current_user.email,
+                    "username": current_user.username,
                 }
             ),
             tasks.upload_video_to_s3.s(),
+            tasks.send_video_url_to_user.s(),
         ).apply_async()
 
         return render_template("file_is_being_downloaded.html", room=room.name, start=start_datetime, end=end_datetime)

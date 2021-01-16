@@ -17,6 +17,8 @@ services:
       - AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
       - CELERY_BROKER_URL=$CELERY_BROKER_URL
       - VIDEO_BUCKET_NAME=$VIDEO_BUCKET_NAME
+      - SENDGRID_S3_VIDEO_URL_TEMPLATE_ID=$SENDGRID_S3_VIDEO_URL_TEMPLATE_ID
+      - SENDGRID_API_KEY=$SENDGRID_API_KEY
     entrypoint: "./dev-entrypoint.sh"
   cctv-celery-workers:
     build: .
@@ -28,6 +30,8 @@ services:
       - AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
       - CELERY_BROKER_URL=$CELERY_BROKER_URL
       - VIDEO_BUCKET_NAME=$VIDEO_BUCKET_NAME
+      - SENDGRID_S3_VIDEO_URL_TEMPLATE_ID=$SENDGRID_S3_VIDEO_URL_TEMPLATE_ID
+      - SENDGRID_API_KEY=$SENDGRID_API_KEY
     entrypoint: ["celery", "-A", "tasks.celery", "worker", "--uid=$UID", "--loglevel=INFO", "--concurrency=100", "-n", "worker1@%h"]
   cctv-celery-workers-video-queue:
     build: .
@@ -39,6 +43,8 @@ services:
       - AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
       - CELERY_BROKER_URL=$CELERY_BROKER_URL
       - VIDEO_BUCKET_NAME=$VIDEO_BUCKET_NAME
+      - SENDGRID_S3_VIDEO_URL_TEMPLATE_ID=$SENDGRID_S3_VIDEO_URL_TEMPLATE_ID
+      - SENDGRID_API_KEY=$SENDGRID_API_KEY
     entrypoint: ["celery", "-A", "tasks.celery", "worker", "--uid=$UID", "--loglevel=INFO", "--concurrency=100", "-n", "worker2@%h", "-Q", "video_queue"]
   cctv-celery-workers-s3-queue:
     build: .
@@ -50,6 +56,8 @@ services:
       - AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
       - CELERY_BROKER_URL=$CELERY_BROKER_URL
       - VIDEO_BUCKET_NAME=$VIDEO_BUCKET_NAME
+      - SENDGRID_S3_VIDEO_URL_TEMPLATE_ID=$SENDGRID_S3_VIDEO_URL_TEMPLATE_ID
+      - SENDGRID_API_KEY=$SENDGRID_API_KEY
     entrypoint: ["celery", "-A", "tasks.celery", "worker", "--uid=$UID", "--loglevel=INFO", "--concurrency=100", "-n", "worker2@%h", "-Q", "s3_queue"]
   cctv-postgres:
     image: postgres
