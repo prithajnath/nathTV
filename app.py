@@ -125,7 +125,7 @@ def download_clip():
             tasks.upload_video_to_s3.s(),
         ).apply_async()
 
-        return "your file is being downloaded"
+        return render_template("file_is_being_downloaded.html", room=room.name, start=start_datetime, end=end_datetime)
 
     return "Download failed"
 
