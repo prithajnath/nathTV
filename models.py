@@ -1,6 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from passlib.hash import pbkdf2_sha256
 from mixins import dbMixin
+from enum import Enum
 from flask_login import UserMixin
 from uuid import uuid1
 
@@ -44,3 +45,27 @@ class Room(db.Model, dbMixin):
         return self.name
 
     __repr__ = __str__
+
+
+class VideoProcessingTask(db.Model, dbMixin):
+    __tablename__ = "video_processing_tasks"
+
+    class Status(Enum):
+        in_queue = 0
+        fetching_hls_url = 1
+        writing_hls_stream_to_file = 2
+        uploading_file_to_s3 = 3
+        emailing_video_to_user = 4
+        done = 5
+
+    id = db.Column(db.Integer, primary_key=True)
+    status = db.Column(db.Enum(Status))
+    video_start_time = db.Column(db.DateTime)
+    video_end_time = db.Column(db.DateTime)
+    started_at = db.Column(db.DateTime)
+    updated_at = db.Column(db.DateTime)
+    finished_at = db.Column(db.DateTime)
+    room_id = db.Column(db.Integer, db.ForeignKey("rooms.id"))
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    room = db.relationship("Room")
+    user = db.relationship("User")

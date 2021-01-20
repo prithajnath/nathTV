@@ -1,43 +1,51 @@
 -i https://pypi.org/simple
-alembic==1.4.3; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'
-amqp==5.0.2; python_version >= '3.6'
+alembic==1.5.1; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4, 3.5'
+amqp==5.0.3; python_version >= '3.6'
 billiard==3.6.3.0
-boto3==1.16.56
-botocore==1.19.56
+boto3==1.16.57
+botocore==1.19.57
 celery==5.0.5
 click-didyoumean==0.0.3
 click-plugins==1.1.1
 click-repl==0.1.6
 click==7.1.2; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4'
+dateparser==1.0.0; python_version >= '3.5'
 dominate==2.6.0; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'
 flask-admin==1.5.7
 flask-bootstrap==3.3.7.1
 flask-login==0.5.0
-flask-migrate==2.5.3
+flask-migrate==2.6.0
 flask-script==2.0.6
 flask-sqlalchemy==2.4.4
 flask-wtf==0.14.3
 flask==1.1.2
 gunicorn==20.0.4
+humanize==3.2.0; python_version >= '3.6'
 itsdangerous==1.1.0; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'
 jinja2==2.11.2; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4'
 jmespath==0.10.0; python_version >= '2.6' and python_version not in '3.0, 3.1, 3.2, 3.3'
 kombu==5.0.2; python_version >= '3.6'
 mako==1.1.4; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'
 markupsafe==1.1.1; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'
+maya==0.6.1
 passlib==1.7.4
+pendulum==2.1.2; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4'
 prompt-toolkit==3.0.10; python_full_version >= '3.6.1'
 psycopg2==2.8.6
 python-dateutil==2.8.1; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'
 python-editor==1.0.4
 python-http-client==3.3.1; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'
 pytz==2020.5
+pytzdata==2020.1; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'
 redis==3.5.3
+regex==2020.11.13
 s3transfer==0.3.4
 sendgrid==6.5.0
 six==1.15.0; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'
+snaptime==0.2.4
 sqlalchemy==1.3.22; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'
 starkbank-ecdsa==1.1.0
+tzlocal==2.1
 urllib3==1.26.2; python_version != '3.4'
 vine==5.0.0; python_version >= '3.6'
 visitor==0.1.3

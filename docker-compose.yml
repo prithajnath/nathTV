@@ -27,6 +27,7 @@ services:
     environment:
       - ENV=development
       - AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
+      - DATABASE_URL=postgres://postgres@cctv-postgres:5432/postgres
       - AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
       - CELERY_BROKER_URL=$CELERY_BROKER_URL
       - VIDEO_BUCKET_NAME=$VIDEO_BUCKET_NAME
@@ -39,6 +40,7 @@ services:
       - .:/usr/bin/cctv
     environment:
       - ENV=development
+      - DATABASE_URL=postgres://postgres@cctv-postgres:5432/postgres
       - AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
       - AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
       - CELERY_BROKER_URL=$CELERY_BROKER_URL
@@ -52,6 +54,7 @@ services:
       - .:/usr/bin/cctv
     environment:
       - ENV=development
+      - DATABASE_URL=postgres://postgres@cctv-postgres:5432/postgres
       - AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
       - AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
       - CELERY_BROKER_URL=$CELERY_BROKER_URL

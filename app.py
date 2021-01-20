@@ -1,19 +1,19 @@
 import boto3
 import os
 import admin
-import tasks
+import maya
 import urllib.parse
 
-from datetime import datetime
-from models import db, User, Room
+from datetime import datetime, timedelta
+from typing import Callable
+from functools import partial
+from models import db, User, Room, VideoProcessingTask
 from celery import Celery, chain
 from flask import (
     Flask,
     render_template,
     request,
     redirect,
-    Response,
-    stream_with_context,
 )
 from flask_bootstrap import Bootstrap
 from flask_migrate import Migrate
@@ -108,25 +108,36 @@ def download_clip():
     form = DownloadClipForm(formdata=request.form)
     print(form.data)
     if form.validate():
-        start_datetime = form.start_datetime.data
-        end_datetime = form.end_datetime.data
+        start_datetime = form.start_datetime.data - timedelta(hours=5, minutes=30)
+        end_datetime = form.end_datetime.data - timedelta(hours=5, minutes=30)
         room_id = request.args.get("room_id")
         room = Room.query.filter_by(id=int(room_id)).first()
 
-        chain(
-            tasks.fetch_stream_data.s(
-                {
-                    "stream_arn": room.stream_arn,
-                    "start_datetime": start_datetime,
-                    "end_datetime": end_datetime,
-                    "room": room.name,
-                    "email": current_user.email,
-                    "username": current_user.username,
-                }
-            ),
-            tasks.upload_video_to_s3.s(),
-            tasks.send_video_url_to_user.s(),
-        ).apply_async()
+        # send_video_url_to_user = last_task_in_chain(tasks.send_video_url_to_user)
+
+        started_at_timestamp = datetime.now()
+        video_task = VideoProcessingTask(
+            room=room,
+            user=current_user,
+            status="in_queue",
+            video_start_time=start_datetime,
+            video_end_time=end_datetime,
+            started_at=started_at_timestamp,
+        )
+
+        video_task.save_to_db(db)
+
+        pipe = {
+            "stream_arn": room.stream_arn,
+            "start_datetime": start_datetime,
+            "end_datetime": end_datetime,
+            "room": room.name,
+            "email": current_user.email,
+            "username": current_user.username,
+            "task_id": video_task.id,
+        }
+
+        celery.send_task("download_archived_kinesis_clip", (pipe,))
 
         return render_template("file_is_being_downloaded.html", room=room.name, start=start_datetime, end=end_datetime)
 
@@ -146,6 +157,28 @@ def login():
                 return redirect("/")
 
     return render_template("login.html", form=form)
+
+
+@app.route("/tasks/<int:task_id>", methods=["GET"])
+@app.route("/tasks", methods=["GET"])
+@login_required
+def tasks(task_id: int = None):
+    if task_id:
+        task = VideoProcessingTask.query.filter_by(user=current_user, id=task_id).first()
+        _statuses = list(VideoProcessingTask.Status)
+        statuses = [(_statuses[i].name, i <= task.status.value) for i in range(len(_statuses))]
+        return render_template("tasks.html", task=task, statuses=statuses)
+    else:
+        _tasks = VideoProcessingTask.query.filter_by(user=current_user).order_by("started_at").all()
+        tasks = [
+            (
+                task,
+                maya.MayaDT.from_datetime(task.video_end_time).datetime(to_timezone="Asia/Calcutta"),
+                maya.MayaDT.from_datetime(task.video_start_time).datetime(to_timezone="Asia/Calcutta"),
+            )
+            for task in _tasks
+        ]
+        return render_template("tasks.html", tasks=tasks)
 
 
 if __name__ == "__main__":

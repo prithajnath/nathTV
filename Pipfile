@@ -22,6 +22,7 @@ wtforms = "*"
 celery = "*"
 redis = "*"
 sendgrid = "*"
+maya = "*"
 
 [requires]
 python_version = "3.8"

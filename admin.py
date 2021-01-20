@@ -1,6 +1,6 @@
 from flask_admin import Admin, AdminIndexView, expose
 from flask_admin.contrib.sqla import ModelView
-from models import User, Room
+from models import User, Room, VideoProcessingTask
 from flask_login import current_user
 from flask import redirect
 
@@ -20,3 +20,4 @@ def register(app, db):
     admin = Admin(app, index_view=MyAdminIndexView())
     admin.add_view(ModelView(User, db.session))
     admin.add_view(ModelView(Room, db.session))
+    admin.add_view(ModelView(VideoProcessingTask, db.session))
